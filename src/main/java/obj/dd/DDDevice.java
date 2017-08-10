@@ -1,33 +1,27 @@
-package obj.pcard;
+package obj.dd;
 
-import obj.Employee;
 import org.apache.log4j.Logger;
 import util.ExcelReader;
 
 import java.io.File;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-// 打卡机
-public class PCardDevice {
+// 钉钉
+public class DDDevice {
 
-    private static String PREFIX = "考勤机_";
+    private static final String PREFIX = "钉钉_";
     private static long DUPLICATED_MIN_INTERVAL_HOUR = 1;
-    public static Logger logger = Logger.getLogger(PCardDevice.class);
-
+    public static Logger logger = Logger.getLogger(DDDevice.class);
     private ExcelReader excelReader = new ExcelReader();
-    private LinkedList<PCardRec> records;
-
-    public PCardDevice() {
-    }
+    private LinkedList<DDRecord> records;
 
     public void init() {
         read();
         clean();
         regulate();
     }
+
 
     private void read() {
         File dir = new File("");
@@ -43,21 +37,19 @@ public class PCardDevice {
         }
 
         if(found) {
-            records = excelReader.readPCard(file);
+            records = excelReader.readDD(file);
         }else {
             logger.debug("未找到考勤机的Excel表.");
         }
-
     }
 
-    // remove duplicate punch card information in case someone punch card mult-times
     private void clean() {
-        PCardRec prior = null;
-        Iterator<PCardRec> iter = records.iterator();
+        DDRecord prior = null;
+        Iterator<DDRecord> iter = records.iterator();
         while(iter.hasNext()) {
-            PCardRec cur = iter.next();
+            DDRecord cur = iter.next();
             if(prior != null) {
-                long diff = prior.getPunchTime().getTime() - cur.getPunchTime().getTime();
+                long diff = prior.getPtime().getTime() - cur.getPtime().getTime();
                 if(cur.getName().equalsIgnoreCase(prior.getName()) &&
                         Math.abs(diff/60000)< DUPLICATED_MIN_INTERVAL_HOUR) {
                     iter.remove();
@@ -65,14 +57,9 @@ public class PCardDevice {
             }
             prior = cur;
         }
-
     }
 
     private void regulate() {
-        for(PCardRec rec : records) {
-            String name = rec.getName();
-            Date time = rec.getPunchTime();
-        }
+
     }
 }
-

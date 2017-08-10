@@ -1,6 +1,7 @@
 package util;
 
 import obj.pcard.PCardRec;
+import obj.dd.DDRecord;
 import org.apache.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
@@ -44,7 +45,7 @@ public class ExcelReader {
 
                 // 考勤时间
                 ++j;
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
                 Date time = sdf.parse(getStringCellValue(row.getCell(j)));
                 
                 // 状态
@@ -89,7 +90,7 @@ public class ExcelReader {
                 break;
             default:
                 // log it
-                logger.error("Strange cell type: " + cell.getCellType());
+                logger.error("Unchecked cell type: " + cell.getCellType());
                 break;
         }
 
@@ -97,8 +98,8 @@ public class ExcelReader {
     }
 
 
-    public LinkedList<PCardRec> readDD(File file) {
-        LinkedList<PCardRec> records = null;
+    public LinkedList<DDRecord> readDD(File file) {
+        LinkedList<DDRecord> records = null;
 
         try {
             Workbook wb = WorkbookFactory.create(file);
@@ -107,11 +108,11 @@ public class ExcelReader {
             System.out.println("dd row: " + nrow);
             Row row = sheet.getRow(3);
             int ncol = row.getPhysicalNumberOfCells();
-            records = new LinkedList<PCardRec>();
+            records = new LinkedList<DDRecord>();
             for(int i=4; i<nrow; i++) {
                 row = sheet.getRow(i);
 
-                // 部门
+                // 姓名
                 int j = 0;
                 String name = getStringCellValue(row.getCell(j));
 
@@ -119,11 +120,45 @@ public class ExcelReader {
                 ++j;
                 String id = getStringCellValue(row.getCell(j));
 
-                // 姓名
+                // skip redundant information
+                ++j; ++j;
+
+                // department
                 ++j;
                 String dep = getStringCellValue(row.getCell(j));
 
-                // currently ignore other fields
+                // date and time
+                ++j;
+                String sdate = getStringCellValue(row.getCell(j));
+                ++j;
+                String stime = getStringCellValue(row.getCell(j));
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                Date time = sdf.parse(sdate + " " + stime);
+
+                // skip longtitude/latitude
+                ++j; ++j;
+
+                // site
+                ++j;
+                String site = getStringCellValue(row.getCell(j));
+
+                // address
+                ++j;
+                String addr = getStringCellValue(row.getCell(j));
+
+                // ignore other fields
+
+                DDRecord e = new DDRecord();
+                e.setName(name);
+                e.setId(id);
+                e.setDep(dep);
+                e.setPtime(time);
+                e.setSite(site);
+                e.setAddress(addr);
+
+                if(r.isAvail(site)) {
+                    records.add(e);
+                }
             }
 
         } catch (FileNotFoundException e) {
@@ -132,6 +167,8 @@ public class ExcelReader {
             e.printStackTrace();
         } catch (InvalidFormatException e) {
             e.printStackTrace();
+        } catch (ParseException e) {e.printStackTrace();
+
         }
 
         return records;
@@ -140,9 +177,9 @@ public class ExcelReader {
     public static void main(String[] args) {
         File file = new File("松立软件7月份钉钉信息.xls");
         ExcelReader er = new ExcelReader();
-        LinkedList<PCardRec> records = er.readDD(file);
-        er.cleanData(records);
-        for(PCardRec rec : records) {
+        LinkedList<DDRecord> records = er.readDD(file);
+//        er.cleanData(records);
+        for(DDRecord rec : records) {
             System.out.println(rec);
         }
     }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Vector;
 
-public class EmployInfo {
+public class Employee {
     // 工号
     String id;
 
@@ -22,6 +22,7 @@ public class EmployInfo {
     // 请假
     ArrayList<Leave> leaves;
 
+    // try to extract this information to CheckSheet
     // 打卡信息
-    PCardList cardList;
+//    PCardList cardList;
 }

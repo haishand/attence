@@ -1,22 +1,21 @@
 package core;
 
-import obj.EmployInfo;
-import obj.dd.DingDing;
+import obj.Employee;
+import obj.dd.DDDevice;
 import obj.pcard.PCardDevice;
-import obj.pcard.PCardInfo;
 
 import java.util.HashMap;
 
 public class App {
-    HashMap<String, EmployInfo> pcards;
-    HashMap<String, EmployInfo> ddcards;
+    HashMap<String, Employee> pcards;
+    HashMap<String, Employee> ddcards;
 
     PCardDevice pcardDevice;
-    DingDing ddDevice;
+    DDDevice ddDevice;
 
     public App() {
         pcardDevice = new PCardDevice();
-        ddDevice = new DingDing();
+        ddDevice = new DDDevice();
     }
 
     public void run() {

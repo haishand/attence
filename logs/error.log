@@ -1,0 +1,6 @@
+2017-08-09 16:03:13  [ util.ExcelReader:main:0 ] - [ ERROR ]  Strange cell type: 3
+2017-08-09 16:03:13  [ util.ExcelReader:main:10 ] - [ ERROR ]  Strange cell type: 3
+2017-08-09 16:03:13  [ util.ExcelReader:main:11 ] - [ ERROR ]  Strange cell type: 3
+2017-08-09 16:03:28  [ util.ExcelReader:main:0 ] - [ ERROR ]  Strange cell type: 3
+2017-08-09 16:03:28  [ util.ExcelReader:main:6 ] - [ ERROR ]  Strange cell type: 3
+2017-08-09 16:03:28  [ util.ExcelReader:main:6 ] - [ ERROR ]  Strange cell type: 3
